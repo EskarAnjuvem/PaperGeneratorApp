@@ -55,25 +55,57 @@ namespace PaperGeneratorApp.Data
                                             Id = questionId,
                                             QuestionText = questionText
                                         };
-                                        if (questionImageURL != null)
+                                        if (!string.IsNullOrEmpty(questionImageURL))
                                         {
                                             currentQuestion.QuestionImageURL = questionImageURL;
+                                            currentQuestion.QuestionImageWidth = (double)reader["default_width"];
                                         }
-
-                                        currentQuestion.AnswerOptions.Add(new Answer
-                                        {
-                                            AnswerText = reader["answer_text"].ToString(),
-                                            IsCorrect = (bool)reader["is_correct"]
-                                        });
+                                        if (reader["answer_text"].ToString() != String.Empty)
+                                        {                                            
+                                            currentQuestion.AnswerOptions.Add(new Answer
+                                            {
+                                                AnswerText = reader["answer_text"].ToString(),
+                                                IsCorrect = (bool)reader["is_correct"],
+                                                AnswerImageURL = ""
+                                            });
+                                        }
+                                        else if (reader["answer_image"] != null)
+                                        {                                            
+                                            currentQuestion.AnswerOptions.Add(new Answer
+                                            {
+                                                AnswerText = "",
+                                                IsCorrect = (bool)reader["is_correct"],
+                                                AnswerImageURL = reader["answer_image"].ToString()
+                                            });
+                                        }                                        
                                         questionsList.Add(currentQuestion);
                                     }
                                     else
                                     {
-                                        currentQuestion.AnswerOptions.Add(new Answer
+                                        if (reader["answer_text"].ToString() != String.Empty)
                                         {
-                                            AnswerText = reader["answer_text"].ToString(),
-                                            IsCorrect = (bool)reader["is_correct"]
-                                        });
+                                            currentQuestion.AnswerOptions.Add(new Answer
+                                            {
+                                                AnswerText = reader["answer_text"].ToString(),
+                                                IsCorrect = (bool)reader["is_correct"],
+                                                AnswerImageURL = ""
+                                            });
+                                        }
+                                        else
+                                        {
+                                            currentQuestion.AnswerOptions.Add(new Answer
+                                            {
+                                                AnswerText = "",
+                                                IsCorrect = (bool)reader["is_correct"],
+                                                AnswerImageURL = reader["answer_image"].ToString()
+                                            });
+                                        }
+                                        //currentQuestion.AnswerOptions.Add(new Answer
+                                        //{
+                                        //    AnswerText = reader["answer_text"].ToString(),
+                                        //    IsCorrect = (bool)reader["is_correct"],
+                                        //    AnswerImageURL = reader["answer_image_id"].ToString()
+                                        //});
                                     }
                                 }
                                 Console.WriteLine("Completed Reading Records Sucessfully.");

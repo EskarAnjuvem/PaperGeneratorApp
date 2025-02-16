@@ -1,5 +1,8 @@
 ﻿using PaperGeneratorApp.Models;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System;
+using System.Threading.Tasks;
 
 namespace PaperGeneratorApp.LaTeXBuilder
 {
@@ -17,15 +20,24 @@ namespace PaperGeneratorApp.LaTeXBuilder
                 {
                     //Console.WriteLine(question.QuestionImageURL);
                     string fileName = Path.GetFileName(question.QuestionImageURL);
+                    double imagewidth = question.QuestionImageWidth;
 
-                    questionsBuilder.AppendLine($"\n\\includegraphics[width = 0.25\\textwidth]{{{fileName}}}\r\n");
+                    questionsBuilder.AppendLine($"\n\\includegraphics[width = {imagewidth}\\textwidth]{{{fileName}}}\r\n");
                 }
 
                 // Add answer options
                 questionsBuilder.AppendLine("\\begin{tasks}(2)");
                 foreach (var answer in question.AnswerOptions)
                 {
-                    questionsBuilder.AppendLine("\\task " + answer.AnswerText);
+                    if (answer.AnswerText != System.String.Empty)
+                    {
+                        questionsBuilder.AppendLine("\\task " + answer.AnswerText);
+                    }
+                    else
+                    {                        
+                        string answerImageFileName = Path.GetFileName(answer.AnswerImageURL);
+                        questionsBuilder.AppendLine($"\\task \\begin{{minipage}} {{0.25\\textwidth}} \\includegraphics[width=0.8\\textwidth]{{{answerImageFileName}}}\\end{{minipage}}");                        
+                    }                    
                 }
                 questionsBuilder.AppendLine("\\end{tasks}");
             }
