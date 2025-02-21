@@ -41,15 +41,39 @@ namespace PaperGeneratorApp.Input
         {
             _outputProvider.Write("Do you need an Answer Key ? (yes/no) : ");
             string? answerKeyInput = _inputProvider.ReadLine()?.Trim().ToLower();
-            NeedAnswerKey = answerKeyInput == "yes";
-            return NeedAnswerKey;
+            if (answerKeyInput == "yes")
+            {
+                return true;
+            }
+            else if (answerKeyInput == "no")
+            {
+                return false;
+            }
+            else
+            {
+                _outputProvider.WriteLine("Invalid Input. Answer Key not being prepared.");
+                return false;
+            }
+            //NeedAnswerKey = answerKeyInput == "yes";
+            //return NeedAnswerKey;
         }
 
         private string GetSubject()
         {
             _outputProvider.Write("Enter the Subject concerned : ");
-            Subject = _inputProvider.ReadLine() ?? _config.DefaultSubject;
-            return Subject;
+            //Subject = _inputProvider.ReadLine() ?? _config.DefaultSubject;
+            string? subject = _inputProvider.ReadLine();
+
+            //Subject = _inputProvider.ReadLine();
+            if (!string.IsNullOrEmpty(subject))
+            {
+                return subject;
+            }
+            else
+            {
+                _outputProvider.WriteLine($"Using the default subject :{_config.DefaultSubject}");
+                return _config.DefaultSubject;                
+            }            
         }
 
         private string GetDifficultyLevel()

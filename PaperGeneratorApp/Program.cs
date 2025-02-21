@@ -38,7 +38,7 @@ var preambleBuilder = new LaTeXPreamble("article", "Sanjeev", "Questions", "Phys
 var questionBuilder = new LaTeXQuestionBuilder();
 var latexGeneratorService = new LaTeXGeneratorService(preambleBuilder, questionBuilder);
 
-string latexFinalText = latexGeneratorService.GenerateLaTeXFile(questionsList);
+string latexFinalText = latexGeneratorService.GenerateLaTeXFile(questionsList, userInput.NeedAnswerKey);
 
 PdfGenerator pdfGenerator = new PdfGenerator(fileService, processService, pdflatexPath, consoleLogger, consoleOutputProvider);
 pdfGenerator.GeneratePdf(latexFinalText, outputDir);
